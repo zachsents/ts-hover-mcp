@@ -80,6 +80,10 @@ Agent: What properties does Workflow have?
 |---------|---------|-------------|
 | `tsHoverMcp.port` | `7777` | Port for the MCP HTTP server |
 
+## Cursor Rule (Optional)
+
+To help the agent use these tools proactively, add a cursor rule. See [cursor-rule-example.md](../cursor-rule-example.md) for a template that tells the agent when to check types instead of guessing.
+
 ## Limitations
 
 - File paths must be absolute
