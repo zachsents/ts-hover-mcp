@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "ts-hover": {
+      "url": "http://localhost:7777/mcp"
+    }
+  }
+}
