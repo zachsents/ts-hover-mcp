@@ -21,6 +21,7 @@ See [extension/README.md](extension/README.md) for full documentation.
    }
    ```
 4. Restart Cursor
+5. (Recommended) Add the example cursor rule to help the agent use the tools effectively. Copy the contents of [`cursor-rule-example.md`](cursor-rule-example.md) into your `.cursor/rules/typescript.mdc` or global cursor rules.
 
 ## License
 
