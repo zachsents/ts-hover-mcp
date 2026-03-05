@@ -11,7 +11,13 @@ No running editor needed. It spawns and manages tsgo LSP instances directly, kee
 Install tsgo globally:
 
 ```bash
+npm install -g @typescript/native-preview
+# or
 bun add -g @typescript/native-preview
+# or
+pnpm add -g @typescript/native-preview
+# or
+yarn global add @typescript/native-preview
 ```
 
 ## Install
