@@ -1,0 +1,50 @@
+{
+  "name": "@zachsents/ts-mcp",
+  "version": "0.3.0",
+  "description": "Give AI agents TypeScript type awareness",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "ts-mcp": "dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "mcp",
+    "typescript",
+    "tsgo",
+    "type-inference",
+    "lsp",
+    "ai",
+    "agent"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zachsents/ts-mcp.git"
+  },
+  "author": "Zach Sents",
+  "license": "MIT",
+  "scripts": {
+    "start": "bun run src/index.ts",
+    "build": "tsc -p tsconfig.build.json && shx chmod +x dist/index.js",
+    "lint": "oxlint --type-aware --fix --fix-suggestions",
+    "format": "prettier --write .",
+    "fix": "bun run lint && bun run format",
+    "typecheck": "tsc --noEmit",
+    "check": "bun run typecheck && bun run fix"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "oxlint": "^1.51.0",
+    "oxlint-tsgolint": "^0.16.0",
+    "prettier": "^3.8.1",
+    "prettier-plugin-jsdoc": "^1.8.0",
+    "shx": "^0.4.0",
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.27.1",
+    "zod": "^4.3.6"
+  }
+}

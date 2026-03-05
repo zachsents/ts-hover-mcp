@@ -1,0 +1,17 @@
+src/
+test/
+extension/
+.cursor/
+.github/
+.vscode/
+*.ts
+!dist/**
+tsconfig.json
+tsconfig.build.json
+biome.json
+.oxlintrc.json
+.prettierrc.json
+cursor.mcp.json
+cursor-rule-example.md
+bun.lock
+.DS_Store

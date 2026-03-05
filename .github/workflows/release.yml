@@ -4,14 +4,14 @@ on:
   push:
     branches: [main]
     paths:
-      - "extension/package.json"
+      - "package.json"
 
 jobs:
-  check-version:
+  release:
     runs-on: ubuntu-latest
-    outputs:
-      should_release: ${{ steps.check.outputs.should_release }}
-      version: ${{ steps.check.outputs.version }}
+    permissions:
+      contents: write
+      id-token: write
     steps:
       - uses: actions/checkout@v4
         with:
@@ -20,46 +20,49 @@ jobs:
       - name: Check if version changed
         id: check
         run: |
-          # Get current version
-          CURRENT_VERSION=$(jq -r '.version' extension/package.json)
-          echo "Current version: $CURRENT_VERSION"
-          
-          # Get previous version
-          git show HEAD~1:extension/package.json > /tmp/old-package.json 2>/dev/null || echo '{"version":"0.0.0"}' > /tmp/old-package.json
-          PREVIOUS_VERSION=$(jq -r '.version' /tmp/old-package.json)
-          echo "Previous version: $PREVIOUS_VERSION"
-          
-          if [ "$CURRENT_VERSION" != "$PREVIOUS_VERSION" ]; then
-            echo "Version changed from $PREVIOUS_VERSION to $CURRENT_VERSION"
+          CURRENT=$(jq -r '.version' package.json)
+          echo "Current version: $CURRENT"
+
+          git show HEAD~1:package.json > /tmp/old.json 2>/dev/null || echo '{"version":"0.0.0"}' > /tmp/old.json
+          PREVIOUS=$(jq -r '.version' /tmp/old.json)
+          echo "Previous version: $PREVIOUS"
+
+          if [ "$CURRENT" != "$PREVIOUS" ]; then
             echo "should_release=true" >> $GITHUB_OUTPUT
-            echo "version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+            echo "version=$CURRENT" >> $GITHUB_OUTPUT
           else
-            echo "Version unchanged"
             echo "should_release=false" >> $GITHUB_OUTPUT
           fi
 
-  release:
-    needs: check-version
-    if: needs.check-version.outputs.should_release == 'true'
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v4
-
       - name: Setup Bun
+        if: steps.check.outputs.should_release == 'true'
         uses: oven-sh/setup-bun@v2
 
       - name: Install dependencies
-        run: cd extension && bun install
+        if: steps.check.outputs.should_release == 'true'
+        run: bun install
 
-      - name: Build extension
-        run: cd extension && bun run package
+      - name: Build
+        if: steps.check.outputs.should_release == 'true'
+        run: bun run build
 
-      - name: Create Release
+      - name: Setup Node (for npm publish)
+        if: steps.check.outputs.should_release == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+
+      - name: Publish to npm
+        if: steps.check.outputs.should_release == 'true'
+        run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Create GitHub Release
+        if: steps.check.outputs.should_release == 'true'
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v${{ needs.check-version.outputs.version }}
-          name: v${{ needs.check-version.outputs.version }}
-          files: extension/*.vsix
+          tag_name: v${{ steps.check.outputs.version }}
+          name: v${{ steps.check.outputs.version }}
           generate_release_notes: true
