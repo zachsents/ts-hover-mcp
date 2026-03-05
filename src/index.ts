@@ -319,10 +319,13 @@ async function applyEdits(filePath: string, edits: LspTextEdit[]) {
   await writeFile(filePath, lines.join("\n"))
 }
 
-process.on("SIGINT", async () => {
+async function cleanup() {
   await pool.shutdown()
   process.exit(0)
-})
+}
+
+process.on("SIGINT", cleanup)
+process.on("SIGTERM", cleanup)
 
 const transport = new StdioServerTransport()
 await server.connect(transport)
