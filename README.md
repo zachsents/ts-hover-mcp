@@ -138,7 +138,7 @@ Get a structured outline of all symbols in a file — functions, classes, interf
 
 ### `rename`
 
-Rename a symbol across the project. Returns the exact text edits needed in each file.
+Rename a symbol across the project. Applies the edits directly to all affected files.
 
 | Parameter   | Type     | Description                          |
 | ----------- | -------- | ------------------------------------ |

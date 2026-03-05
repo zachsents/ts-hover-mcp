@@ -39,7 +39,7 @@ You have access to MCP tools that query the live TypeScript language server for 
 
 - When renaming a variable, function, type, or interface across the project
 - Always prefer this over manual find-and-replace — it's type-safe and won't miss references
-- Returns exact text edits grouped by file
+- Applies edits directly to all affected files on disk
 
 ## When to use `inlay_hints`
 
